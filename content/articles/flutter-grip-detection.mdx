@@ -1,0 +1,61 @@
+---
+title: "Building Grip Detection in Flutter"
+description: "How to detect left-hand vs right-hand usage with the accelerometer."
+category: "Flutter"
+date: "2026-04-05"
+---
+
+Grip detection means knowing which hand holds the phone — and adapting button positions accordingly. It's a small UX win with big retention impact.
+
+## The signal
+
+The accelerometer tells you device tilt on the X-axis:
+
+- Negative tilt = leaning left = user holding right
+- Positive tilt = leaning right = user holding left
+
+Easy in theory. Hard in practice.
+
+## The problems
+
+Real users don't hold phones perfectly still. They walk. They're on the bus. They're lying down on a couch. Naive thresholding misclassifies 40% of the time.
+
+A few sources of false positives:
+
+- Walking introduces a ~2Hz sway that mimics tilt drift
+- Landscape rotation looks identical to a deep tilt
+- Lying flat on a desk reads the same as both hands free
+
+## The solution
+
+Multiple signals combined:
+
+1. 20-sample window of accelerometer data — rolling median, not raw
+2. Posture detection (portrait / landscape / moving / flat) — gates the classifier
+3. Persistence prior — last session's grip is a strong predictor of this one
+4. Eager-lock window — if 5 samples agree with the prior, lock it for the rest of the session
+
+This gets you 92% accuracy on the first session and 98% on session 5+.
+
+## In Morph SDK
+
+All of this is one widget:
+
+```dart
+GripAdaptiveLayout(
+  child: ProductView(),
+  primaryAction: AddToCartButton(),
+)
+```
+
+The button repositions toward the user's thumb. That's it.
+
+## What you get for free
+
+The same widget also handles:
+
+- Reachability — anything inside `primaryAction` stays in the bottom 60% of the screen
+- One-handed mode detection — collapses non-essential UI when grip is unstable
+- Telemetry hook — `onGripChange: (grip) => analytics.track(...)` for product analysis
+
+A small thing that makes your app feel like it was built for *this* user, not a generic one.

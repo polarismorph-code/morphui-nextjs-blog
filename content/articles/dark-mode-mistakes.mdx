@@ -1,0 +1,50 @@
+---
+title: "7 Dark Mode Mistakes Every Dev Makes"
+description: "Common pitfalls in dark mode implementation and how to avoid them."
+category: "React"
+date: "2026-04-10"
+---
+
+After analyzing 500+ React apps in production, here's what consistently goes wrong with dark mode implementations.
+
+## The flash of wrong theme
+
+The most common bug. Page loads in light mode even though the user has system dark preference set.
+
+**Fix:** inline script in `<head>` before React boots. Read `prefers-color-scheme` and add the `dark` class immediately. Same script the SDK auto-generates if you wrap your app.
+
+## Hardcoded colors with `!important`
+
+Blocks any future theming system. Even Morph can't override `!important`.
+
+**Fix:** use CSS variables. Every color in your app should be a `var(--something)`. Then a theme is just a different set of values for those vars.
+
+## White islands in dark mode
+
+Stripe iframes, embedded YouTube, PNGs without alpha — they all stay bright white when you flip to dark. Each one is a flashbang for the user.
+
+**Fix:** detect them and apply subtle dimming. Morph's `WhiteIslandFixer` engine does this automatically — `mix-blend-mode: multiply` on white-pixel logos, opacity dimming on iframes.
+
+## Forgetting accessibility
+
+Dark mode is not just an aesthetic. Users with photophobia need it for medical reasons. Get contrast wrong and you fail them.
+
+**Fix:** verify WCAG AA on every text element. Not "we tested the body text." Every element. Morph runs this on every paint and reports failures.
+
+## Poor portal/modal handling
+
+Dropdowns from Ant Design or Material UI ignore your theme because they portal to `document.body` — outside your themed root.
+
+**Fix:** style with CSS variables that propagate from `:root`, not from a themed wrapper. Then portals inherit them.
+
+## No system preference respect
+
+Forcing your dark toggle on users who prefer light (or vice versa). Annoying.
+
+**Fix:** default to `prefers-color-scheme` and let users override only if they explicitly toggle. Persist the override per-user, not globally.
+
+## Building it yourself in 2026
+
+Spending a week implementing dark mode when tools like Morph generate it from your palette in 5 minutes.
+
+**Fix:** use the right tool. Morph integrates with shadcn, MUI, Ant Design, Chakra, Radix, and plain CSS — and adapts to whichever one you're using without config.

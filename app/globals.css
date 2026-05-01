@@ -1,0 +1,452 @@
+@import "tailwindcss";
+
+/* Satoshi is loaded via <link> in app/layout.tsx — CSS @import
+   would be re-ordered after Tailwind's expansion and break the
+   "@import must precede all rules" CSS spec rule. */
+
+/* ─── Light palette — the ONLY palette we ship ──────────────
+   Morph generates the dark variant at runtime from these
+   colors via the --morph-* CSS variables. We never hard-code
+   a dark theme: that's the SDK's job.
+   Every consumer reads `var(--morph-*, fallback)` so Morph can
+   override without a JS reflow.
+   ──────────────────────────────────────────────────────────── */
+:root {
+  --brand-bg: #fafafa;
+  --brand-surface: #ffffff;
+  --brand-elevated: #f4f4f5;
+  --brand-elevated-hover: #ebebec;
+  --brand-text: #0a0a0a;
+  --brand-text-secondary: rgba(10, 10, 10, 0.62);
+  --brand-text-tertiary: rgba(10, 10, 10, 0.38);
+  --brand-border: rgba(10, 10, 10, 0.07);
+  --brand-border-strong: rgba(10, 10, 10, 0.12);
+  --brand-primary: #5b54ff;
+  --brand-primary-hover: #4f46e5;
+  --brand-primary-soft: rgba(91, 84, 255, 0.1);
+  --brand-primary-text: #ffffff;
+
+  --background: var(--morph-bg, var(--brand-bg));
+  --surface: var(--morph-card-bg, var(--brand-surface));
+  --elevated: var(--brand-elevated);
+  --elevated-hover: var(--brand-elevated-hover);
+  --foreground: var(--morph-text-primary, var(--brand-text));
+  --muted-foreground: var(--morph-text-secondary, var(--brand-text-secondary));
+  --tertiary-foreground: var(--brand-text-tertiary);
+  --border: var(--morph-border, var(--brand-border));
+  --border-strong: var(--brand-border-strong);
+  --primary: var(--morph-primary, var(--brand-primary));
+  --primary-hover: var(--brand-primary-hover);
+  --primary-soft: var(--brand-primary-soft);
+  --primary-foreground: var(--morph-primary-text, var(--brand-primary-text));
+
+  --radius: 0.875rem;
+  --radius-sm: 0.5rem;
+  --radius-lg: 1.25rem;
+
+  --shadow-sm: 0 1px 2px rgba(10, 10, 10, 0.04);
+  --shadow-md: 0 4px 12px rgba(10, 10, 10, 0.06);
+  --shadow-lg: 0 12px 32px rgba(10, 10, 10, 0.08);
+}
+
+/* ─── Dark fallback ──────────────────────────────────────────
+   Morph (free tier) only injects --morph-bg + --morph-text-primary
+   on dark mode; all other derived brand vars (surface, border,
+   muted-foreground, etc.) would stay at their LIGHT values and
+   become invisible on a dark background.
+
+   Two triggers below give the cascade sensible dark equivalents:
+   1. @media (prefers-color-scheme: dark) — browser-level instant
+      fallback while Morph hasn't yet validated the license / fetched
+      its AI theme. Scoped with :not(.chameleon-light) so an explicit
+      Morph "lighten" decision overrides the system pref.
+   2. .dark / .chameleon-dark — what Morph adds on <html> once it
+      has decided dark is the right mode.
+
+   Either way: Morph's --morph-* vars (when they arrive) still win in
+   the `var(--morph-*, var(--brand-*))` chain — these are pure
+   fallbacks, not a competing dark theme.
+   ──────────────────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root:not(.chameleon-light) {
+    --brand-bg: #0f172a;
+    --brand-surface: #1e293b;
+    --brand-elevated: #28324a;
+    --brand-elevated-hover: #334155;
+    --brand-text: #f8fafc;
+    --brand-text-secondary: rgba(248, 250, 252, 0.65);
+    --brand-text-tertiary: rgba(248, 250, 252, 0.42);
+    --brand-border: rgba(255, 255, 255, 0.08);
+    --brand-border-strong: rgba(255, 255, 255, 0.16);
+    --brand-primary-soft: rgba(91, 84, 255, 0.18);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.32);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.48);
+
+    color-scheme: dark;
+  }
+}
+
+.dark,
+.chameleon-dark {
+  --brand-bg: #0f172a;
+  --brand-surface: #1e293b;
+  --brand-elevated: #28324a;
+  --brand-elevated-hover: #334155;
+  --brand-text: #f8fafc;
+  --brand-text-secondary: rgba(248, 250, 252, 0.65);
+  --brand-text-tertiary: rgba(248, 250, 252, 0.42);
+  --brand-border: rgba(255, 255, 255, 0.08);
+  --brand-border-strong: rgba(255, 255, 255, 0.16);
+  --brand-primary-soft: rgba(91, 84, 255, 0.18);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.32);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.48);
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-elevated: var(--elevated);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-tertiary-foreground: var(--tertiary-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --font-sans: "Satoshi", system-ui, -apple-system, sans-serif;
+  --font-display: "Satoshi", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, monospace;
+
+  --radius: var(--radius);
+  --radius-sm: var(--radius-sm);
+  --radius-lg: var(--radius-lg);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  /* Respect users who ask for less motion. Both triggers:
+     1. @media (prefers-reduced-motion: reduce) — browser-level, native
+     2. --morph-motion: 0 — Morph injects when its detection layer
+        confirms reduced-motion (or when the app explicitly opts in).
+     We collapse durations to 0.01ms (not 0) so callbacks like
+     transitionend still fire — some libs depend on them. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  html {
+    font-family: "Satoshi", system-ui, -apple-system, sans-serif;
+    font-feature-settings: "ss01", "ss02", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* Morph injects --morph-font-scale (2px) when prefers-contrast:
+       more|high is detected. Anchored to <html> so every Tailwind
+       rem-based class (text-sm, text-lg, etc.) scales proportionally.
+       Default 16px → 18px in high-contrast mode. */
+    font-size: calc(16px + var(--morph-font-scale, 0px));
+    transition: font-size 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    transition:
+      background-color 280ms cubic-bezier(0.16, 1, 0.3, 1),
+      color 280ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 28%, transparent);
+    color: var(--foreground);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 999px;
+    border: 2px solid var(--background);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--tertiary-foreground);
+  }
+}
+
+/* ─── Prose — long-form article styling ────────────────────── */
+.prose {
+  color: var(--foreground);
+  line-height: 1.75;
+  font-size: 1.0625rem;
+  max-width: 68ch;
+  letter-spacing: -0.005em;
+}
+.prose > * + * {
+  margin-top: 1.4em;
+}
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.022em;
+  color: var(--foreground);
+  line-height: 1.2;
+}
+.prose h1 {
+  font-size: 2.5rem;
+  margin-top: 2em;
+  font-weight: 900;
+}
+.prose h2 {
+  font-size: 1.625rem;
+  margin-top: 2.5em;
+  scroll-margin-top: 6rem;
+}
+.prose h3 {
+  font-size: 1.25rem;
+  margin-top: 2em;
+  scroll-margin-top: 6rem;
+  font-weight: 700;
+}
+.prose p {
+  color: var(--foreground);
+  font-weight: 400;
+}
+.prose strong {
+  color: var(--foreground);
+  font-weight: 700;
+}
+.prose a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--primary) 30%, transparent);
+  text-underline-offset: 4px;
+  transition: text-decoration-color 200ms;
+}
+.prose a:hover {
+  text-decoration-color: var(--primary);
+}
+.prose code {
+  background: var(--elevated);
+  border: 1px solid var(--border);
+  padding: 0.18em 0.45em;
+  border-radius: 0.4rem;
+  font-size: 0.875em;
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+.prose pre {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 1.25rem 1.4rem;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  box-shadow: var(--shadow-sm);
+}
+.prose pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  font-weight: 400;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.5em;
+}
+.prose li {
+  margin: 0.5em 0;
+  padding-left: 0.25em;
+}
+.prose ul li::marker {
+  color: var(--tertiary-foreground);
+}
+.prose ol li::marker {
+  color: var(--tertiary-foreground);
+  font-weight: 600;
+}
+.prose blockquote {
+  border-left: 2px solid var(--primary);
+  padding-left: 1.25em;
+  font-style: normal;
+  color: var(--muted-foreground);
+  font-size: 1.0625rem;
+}
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2.5em 0;
+}
+
+.prose .anchor-link {
+  color: var(--tertiary-foreground);
+  margin-left: 0.5rem;
+  opacity: 0;
+  text-decoration: none;
+  font-weight: 400;
+  transition: opacity 150ms ease;
+}
+.prose h2:hover .anchor-link,
+.prose h3:hover .anchor-link {
+  opacity: 1;
+}
+
+/* ─── Premium reusable utilities ─────────────────────────── */
+.glass {
+  background: color-mix(in srgb, var(--background) 72%, transparent);
+  backdrop-filter: saturate(160%) blur(14px);
+  -webkit-backdrop-filter: saturate(160%) blur(14px);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, var(--primary), var(--primary-hover));
+  color: var(--primary-foreground);
+  border: 1px solid color-mix(in srgb, var(--primary) 50%, transparent);
+  box-shadow:
+    var(--shadow-sm),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  transition:
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    var(--shadow-md),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-ghost {
+  background: var(--surface);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  transition:
+    background 180ms,
+    border-color 180ms,
+    transform 180ms;
+}
+.btn-ghost:hover {
+  background: var(--elevated);
+  border-color: var(--border-strong);
+}
+
+.hero-aurora {
+  position: relative;
+  isolation: isolate;
+}
+.hero-aurora::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 70%;
+  background:
+    radial-gradient(
+      40% 60% at 30% 50%,
+      color-mix(in srgb, var(--primary) 18%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      30% 50% at 75% 30%,
+      color-mix(in srgb, #a855f7 16%, transparent),
+      transparent 60%
+    );
+  filter: blur(60px);
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition:
+    border-color 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-hover:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: var(--primary-soft);
+  border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent);
+  color: var(--primary);
+}
+
+/* Re-assert background-clip:text with high enough specificity to beat
+   any AI-generated `background: linear-gradient(...) !important` rule
+   on the same element. The shorthand `background` resets background-
+   clip to its default (border-box), which turns gradient-clipped text
+   into a solid gradient card with invisible text. The compound
+   selector wins on specificity (0,2,0 vs the AI's 0,1,1) so the
+   clip-to-text behaviour stays. */
+.bg-clip-text.bg-gradient-to-br,
+.bg-clip-text.bg-gradient-to-r,
+.bg-clip-text.bg-gradient-to-l,
+.bg-clip-text.bg-gradient-to-t,
+.bg-clip-text.bg-gradient-to-b,
+.bg-clip-text.bg-gradient-to-tr,
+.bg-clip-text.bg-gradient-to-tl,
+.bg-clip-text.bg-gradient-to-bl {
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+/* Force the pill text + bg to stay readable even when the AI generates
+   a darker / lighter primary that would crush contrast against the
+   page background. We use `currentColor` derived from --primary AND
+   layer a dark-only fallback so the text is always visible. */
+.pill {
+  /* Stronger background fill (16% → 22%) so the chip reads as a
+     distinct surface rather than a low-contrast smear of the bg. */
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+  border-color: color-mix(in srgb, var(--primary) 36%, transparent);
+}
+.dark .pill,
+.chameleon-dark .pill {
+  /* In dark, mix toward white so the text reads as a near-white
+     tint rather than a saturated indigo on a dark indigo bg. */
+  color: color-mix(in srgb, var(--primary) 65%, #ffffff 35%);
+}
