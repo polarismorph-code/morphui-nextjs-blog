@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import { ArticleCard } from "@/components/article-card";
 import { ThemeIndicator } from "@/components/theme-indicator";
 import { getAllArticles } from "@/content/lib/articles";
@@ -11,14 +12,20 @@ export default async function HomePage() {
     <div className="container max-w-6xl mx-auto px-6 pt-20 pb-24 flex flex-col">
       <section data-morph-pin className="hero-aurora text-center mb-24">
         <div className="pill mx-auto mb-7">
-          <Sparkles className="w-3.5 h-3.5" strokeWidth={2.5} />
+          <Image
+            src="/morph-icon-transparent.svg"
+            alt=""
+            width={14}
+            height={14}
+            className="w-3.5 h-3.5"
+          />
           <span>Powered by Morph SDK</span>
         </div>
 
         <h1 className="text-5xl md:text-7xl font-black mb-7 tracking-[-0.035em] leading-[1.02]">
           The blog that
           <br />
-          <span className="bg-gradient-to-br from-[var(--primary)] via-[#8b5cf6] to-[#ec4899] bg-clip-text text-transparent">
+          <span className="bg-gradient-to-br from-brand-intelligence via-brand-adapt to-brand-signal bg-clip-text text-transparent">
             adapts to you
           </span>
         </h1>
@@ -38,7 +45,7 @@ export default async function HomePage() {
             <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
           </Link>
           <a
-            href="https://github.com/morphuiapp/morphui-nextjs-blog"
+            href="https://github.com/polarismorph-code/morphui-nextjs-blog"
             target="_blank"
             rel="noreferrer"
             className="btn-ghost inline-flex items-center gap-2 h-11 px-5 rounded-xl text-sm font-semibold"

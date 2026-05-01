@@ -29,7 +29,7 @@ export function SiteFooter() {
               Playground
             </Link>
             <a
-              href="https://github.com/morphuiapp/morphui-nextjs-blog"
+              href="https://github.com/polarismorph-code/morphui-nextjs-blog"
               target="_blank"
               rel="noreferrer"
               className="hover:text-foreground transition-colors"
