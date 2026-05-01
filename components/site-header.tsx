@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import Image from "next/image";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -22,9 +22,14 @@ export function SiteHeader() {
           href="/"
           className="flex items-center gap-2 font-bold text-[15px] tracking-tight"
         >
-          <span className="grid place-items-center w-7 h-7 rounded-lg bg-primary-soft border border-[color:color-mix(in_srgb,var(--primary)_22%,transparent)]">
-            <Sparkles className="w-3.5 h-3.5 text-primary" strokeWidth={2.5} />
-          </span>
+          <Image
+            src="/morph-icon-transparent.svg"
+            alt=""
+            width={28}
+            height={28}
+            priority
+            className="w-7 h-7"
+          />
           Morph Blog
         </Link>
 
@@ -38,7 +43,7 @@ export function SiteHeader() {
             Get Morph
           </a>
           <a
-            href="https://github.com/morphuiapp/morphui-nextjs-blog"
+            href="https://github.com/polarismorph-code/morphui-nextjs-blog"
             target="_blank"
             rel="noreferrer"
             className="btn-ghost inline-flex items-center gap-2 h-9 px-3.5 rounded-lg text-sm font-medium"

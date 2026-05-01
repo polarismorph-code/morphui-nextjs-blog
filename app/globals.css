@@ -21,10 +21,16 @@
   --brand-text-tertiary: rgba(10, 10, 10, 0.38);
   --brand-border: rgba(10, 10, 10, 0.07);
   --brand-border-strong: rgba(10, 10, 10, 0.12);
-  --brand-primary: #5b54ff;
-  --brand-primary-hover: #4f46e5;
-  --brand-primary-soft: rgba(91, 84, 255, 0.1);
+
+  /* Official Morph brand palette — kept in lockstep with
+     chameleon-landing/tailwind.config.ts. Update both at once. */
+  --brand-primary: #4f46e5;       /* brand-intelligence */
+  --brand-primary-hover: #4338ca;
+  --brand-primary-soft: rgba(79, 70, 229, 0.1);
   --brand-primary-text: #ffffff;
+  --brand-adapt: #7c3aed;          /* secondary accent / gradient stop */
+  --brand-signal: #06b6d4;         /* confirmation / highlight */
+  --brand-void: #0d0d1a;           /* dark hero bg for marketing surfaces */
 
   --background: var(--morph-bg, var(--brand-bg));
   --surface: var(--morph-card-bg, var(--brand-surface));
@@ -78,7 +84,7 @@
     --brand-text-tertiary: rgba(248, 250, 252, 0.42);
     --brand-border: rgba(255, 255, 255, 0.08);
     --brand-border-strong: rgba(255, 255, 255, 0.16);
-    --brand-primary-soft: rgba(91, 84, 255, 0.18);
+    --brand-primary-soft: rgba(79, 70, 229, 0.18);
 
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.32);
@@ -99,7 +105,7 @@
   --brand-text-tertiary: rgba(248, 250, 252, 0.42);
   --brand-border: rgba(255, 255, 255, 0.08);
   --brand-border-strong: rgba(255, 255, 255, 0.16);
-  --brand-primary-soft: rgba(91, 84, 255, 0.18);
+  --brand-primary-soft: rgba(79, 70, 229, 0.18);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.32);
@@ -120,6 +126,10 @@
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-primary-foreground: var(--primary-foreground);
+  --color-brand-intelligence: var(--brand-primary);
+  --color-brand-adapt: var(--brand-adapt);
+  --color-brand-signal: var(--brand-signal);
+  --color-brand-void: var(--brand-void);
 
   --font-sans: "Satoshi", system-ui, -apple-system, sans-serif;
   --font-display: "Satoshi", system-ui, -apple-system, sans-serif;
